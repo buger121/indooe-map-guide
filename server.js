@@ -19,4 +19,4 @@ app.all('*',function (req, res, next) {
 app.use(express.static('client'))
 app.get('/', (req, res) => res.send('Connect!'))
 
-app.listen(port || process.env.PORT, () => console.log(`app listening on port ${port}!`))
+app.listen(process.env.PORT || 3000, () => console.log(`app listening on port ${port}!`))
