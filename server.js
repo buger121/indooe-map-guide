@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3000
+const port = 3000 || process.env.PORT
 
 //解决跨域
 app.all('*',function (req, res, next) {
@@ -19,4 +19,4 @@ app.all('*',function (req, res, next) {
 app.use(express.static('client'))
 app.get('/', (req, res) => res.send('Connect!'))
 
-app.listen(process.env.PORT || 3000, () => console.log(`app listening on port ${port}!`))
+app.listen(port, () => console.log(`app listening on port ${port}!`))
