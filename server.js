@@ -1,6 +1,6 @@
 const express = require('express')
 const app = express()
-const port = 3000 || process.env.PORT
+const port = process.env.PORT || 3000
 
 //解决跨域
 app.all('*',function (req, res, next) {
