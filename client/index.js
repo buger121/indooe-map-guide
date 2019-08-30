@@ -7,6 +7,7 @@ var map = new esmap.ESMap({
     focusFloor: 1,                      //初始聚焦楼层
 });
 map.openMapById(472653);                 //根据ID打开地图
+var center = map.center;  //取地图的中心墨卡托坐标
 
 //声明楼层控件配置参数
 var ctlOpt = new esmap.ESControlOptions({
@@ -23,6 +24,10 @@ var ctlOpt1 = new esmap.ESControlOptions({
     },
     imgURL: "image/wedgets/"
 });
+
+map.on('loadComplete', function() {
+    str = Android.getPosition()
+})
 
 //2.在地图加载完成事件中新建控件对象
 map.on('loadComplete', function () {
@@ -54,7 +59,7 @@ $('#btn3D').on('click', function () {
 });
 
 map.on('mapClickNode', function(event) {
-    console.log(event)
+    console.log(event.hitCoord)
 })
 
 //图片标注
@@ -63,12 +68,12 @@ map.on('loadComplete',function(){
     var layer = new esmap.ESLayer(esmap.ESLayerType.IMAGE_MARKER);
     //创建一个图片标注实例
     im = new esmap.ESImageMarker({
-		// x: gpos.x + 30,
-		// y: gpos.y - 30,   //如果不添加x和y，则默认坐标在地图中心。
+		x: center.x - 1,
+		y: center.y - 1,   //如果不添加x和y，则默认坐标在地图中心。
 		url: 'image/user.png',  //图片标注的图片地址
 		size: 64,   			//图片大小 或者 size:{w:32,h:64},
 		spritify:true,			//跟随地图缩放变化大小，默认为true，可选参数
-		height:1,    			//距离地面高度
+		height:6,    			//距离地面高度
 		showLevel: 20,  		//地图缩放等级达到多少时隐藏,可选参数
 		seeThrough: true,		//是否可以穿透楼层一直显示,可选参数
 		//angle:30,  	//如果设置了就是固定marker角度，与地图一起旋转。(size需要重新设置)
@@ -80,7 +85,7 @@ map.on('loadComplete',function(){
 	var floorLayer = map.getFloor(1)  //获取第一层的楼层对象
     floorLayer.addLayer(layer);       //将图层添加到楼层对象
     
-    layer.remove(im);   //删除某一个标注
+    // layer.remove(im);   //删除某一个标注
 })
 
 //线标注
@@ -130,10 +135,14 @@ map.on('loadComplete', function(){
 
 //定位标注绘制
 map.on('loadComplete', function(){
+    //获取位置信息
+    var diffX = parseInt(str.split(",")[0].split(":")[1]);
+    var diffY = parseInt(str.split(",")[1].split(":")[1]);
+    
     //1.新建一个定位标注实例
     var lm = new esmap.ESLocationMarker({
         url: 'image/pointer.png',
-        size: 150,
+        size: 100,
         height: 30  
     });
     //2.添加到地图
@@ -141,23 +150,24 @@ map.on('loadComplete', function(){
     //3.设置位置
     var center = map.center;
     lm.setPosition({
-        x: center.x,
-        y: center.y,
+        x: center.x + diffX,
+        y: center.y + diffY,
         fnum: 2,  
         height: 1      //离地面的偏移量
     })
-    lm.rotateTo(-40);//有过渡效果的更新定位标注方向
-    lm.direction = -40; //改变定位标注的方向
-    lm.moveTo({
-        x: map.center.x + 10,
-        y: map.center.y + 10,
-        fnum: 2,  
-        height: 1,      //离地面的偏移量
-        time: 3
-    });
+    //更新地图标注
+    // lm.rotateTo(-40);//有过渡效果的更新定位标注方向
+    // lm.direction = -40; //改变定位标注的方向
+    // lm.moveTo({
+    //     x: map.center.x + 10,
+    //     y: map.center.y + 10,
+    //     fnum: 2,  
+    //     height: 1,      //离地面的偏移量
+    //     time: 3
+    // });
 
     //4.删除定位标注
-    map.removeLocationMarker(lm)
+    // map.removeLocationMarker(lm)
 })
 
 //地图数据信息检索
@@ -179,48 +189,48 @@ map.on('loadComplete', function(){
 })
 
 //地图路径规划
-map.on('loadComplete', function(){
-    //1.创建导航对象实例
-    var navi = new esmap.ESNavigation({
-        map: map,
-        ladderType:1,  //跨层方案选择。1:距离最近(默认),2:电梯 3.楼梯 4.扶梯
-        lineStyle: {   //路径规划线样式配置
-            color: '#33cc61',
-            //设置线为导航线样式
-            lineType: esmap.ESLineType.ESARROW,
-            // lineType: esmap.ESLineType.FULL,            
-            lineWidth: 6,
-            offsetHeight: 0.5,
-            smooth: true,
-            seeThrough: false,
-            noAnimate: false
-            //设置边线的颜色   
-            // godEdgeColor: '#920000'
-            //设置箭头颜色
-            // godArrowColor: "#ff0000"
-        },
-    });
-    //2.确定起点和终点
-    //确定起点
-    var center = map.center
-    navi.setStartPoint({
-        x: center.x,
-        y: center.y,
-        fnum: 1,
-        height: 2,
-        url: 'image/start.png',
-        size: 64
-    });
-    //确定终点
-    navi.setEndPoint({
-        x: center.x + 10,
-        y: center.y + 10,
-        fnum: 1,
-        height: 2,
-        url: 'image/end.png',
-        size: 64
-    });
-    //3.调用导航对象画线函数，显示路径规划
-    navi.drawNaviLine();
-    console.log(center.x, center.y)
-})
+// map.on('loadComplete', function(){
+//     //1.创建导航对象实例
+//     var navi = new esmap.ESNavigation({
+//         map: map,
+//         ladderType:1,  //跨层方案选择。1:距离最近(默认),2:电梯 3.楼梯 4.扶梯
+//         lineStyle: {   //路径规划线样式配置
+//             color: '#33cc61',
+//             //设置线为导航线样式
+//             lineType: esmap.ESLineType.ESARROW,
+//             // lineType: esmap.ESLineType.FULL,            
+//             lineWidth: 6,
+//             offsetHeight: 0.5,
+//             smooth: true,
+//             seeThrough: false,
+//             noAnimate: false
+//             //设置边线的颜色   
+//             // godEdgeColor: '#920000'
+//             //设置箭头颜色
+//             // godArrowColor: "#ff0000"
+//         },
+//     });
+//     //2.确定起点和终点
+//     //确定起点
+//     var center = map.center
+//     navi.setStartPoint({
+//         x: center.x,
+//         y: center.y,
+//         fnum: 1,
+//         height: 2,
+//         url: 'image/start.png',
+//         size: 64
+//     });
+//     //确定终点
+//     navi.setEndPoint({
+//         x: center.x + 10,
+//         y: center.y + 10,
+//         fnum: 1,
+//         height: 2,
+//         url: 'image/end.png',
+//         size: 64
+//     });
+//     //3.调用导航对象画线函数，显示路径规划
+//     // navi.drawNaviLine();
+//     console.log(center.x, center.y)
+// })
