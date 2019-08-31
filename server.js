@@ -19,8 +19,8 @@ app.all('*',function (req, res, next) {
 app.use(express.static('client'))
 
 app.get('/', (req, res) => res.send('Connect!'))
-app.('/:position', (req, res) => {
-  res.send(req)
+app.get('/:position', (req, res) => {
+  res.send(req.params)
 })
 
 app.listen(port, () => console.log(`app listening on port ${port}!`))
