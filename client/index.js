@@ -43,7 +43,7 @@ map.on('loadComplete', function () {
 
 });
 map.showScaler = false;
-map.showCompass = true;
+map.showCompass = false;
 
 //2维模式
 $('#btn2D').on('click', function () {
@@ -134,7 +134,8 @@ map.on('loadComplete', function(){
     //获取位置信息
     var str = '';
     var xhr = new XMLHttpRequest();
-    xhr.open('get', 'https://indoor-map-guide-9527.herokuapp.com/lastline', false);
+    // xhr.open('get', 'https://indoor-map-guide-9527.herokuapp.com/lastline', false);
+    xhr.open('get', 'http://localhost:3000/lastline', false);
     xhr.send(null);
     if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
         console.log(xhr.responseText)
