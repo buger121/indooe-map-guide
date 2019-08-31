@@ -25,10 +25,6 @@ var ctlOpt1 = new esmap.ESControlOptions({
     imgURL: "image/wedgets/"
 });
 
-map.on('loadComplete', function() {
-    str = Android.getPosition()
-})
-
 //2.在地图加载完成事件中新建控件对象
 map.on('loadComplete', function () {
     //创建楼层控件
@@ -136,6 +132,17 @@ map.on('loadComplete', function(){
 //定位标注绘制
 map.on('loadComplete', function(){
     //获取位置信息
+    var str = '';
+    var xhr = new XMLHttpRequest();
+    xhr.open('get', 'https://indoor-map-guide-9527.herokuapp.com/lastline', false);
+    xhr.send(null);
+    if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
+        console.log(xhr.responseText)
+        str = xhr.responseText
+    } else {
+        console.log('获取位置信息失败')
+    }
+
     var diffX = parseInt(str.split(",")[0].split(":")[1]);
     var diffY = parseInt(str.split(",")[1].split(":")[1]);
     
