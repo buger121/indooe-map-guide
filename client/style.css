@@ -23,6 +23,49 @@
     left: 40px;
 }
 
+.search { 
+    position: absolute;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-left: 10px;
+    top: 2rem;
+    left: 3rem;
+}
+#router {
+    position: absolute;
+    padding: 20px;
+    width: 200px;
+    top: 1rem;
+    left: 7rem;
+    padding: 0px;
+    /*margin-left: px;*/
+    border: 1px solid #e6e6e6;
+    background: #fff;
+    /* box-shadow: 3px 3px 3px #bdbdbd; */
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    z-index: 999;
+    display: none;
+}
+
+.router .routerInput {
+    height: 40px;
+    padding: 6px 0;
+    box-sizing: border-box;
+}
+
+.router .routerInput .routerText {
+    width: 180px;
+    border: none;
+    outline: 0;
+    height: 20px;
+    font-size: 16px;
+    border-bottom: 1px solid #dedede;
+    margin-left: 6px;
+}
+
 
 
 

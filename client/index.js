@@ -1,3 +1,4 @@
+
 var map = new esmap.ESMap({
     container:document.getElementById('map-container'), //地图显示容器
     token:"100701",  //打开地图对应的token
@@ -43,7 +44,7 @@ map.on('loadComplete', function () {
 
 });
 map.showScaler = false;
-map.showCompass = false;
+map.showCompass = true;
 
 //2维模式
 $('#btn2D').on('click', function () {
@@ -55,7 +56,7 @@ $('#btn3D').on('click', function () {
 });
 
 map.on('mapClickNode', function(event) {
-    console.log(event.hitCoord)
+    // console.log(event)
 })
 
 //图片标注
@@ -134,35 +135,45 @@ map.on('loadComplete', function(){
     //获取位置信息
     var str = '';
     var xhr = new XMLHttpRequest();
+    //同步请求方式
     // xhr.open('get', 'https://indoor-map-guide-9527.herokuapp.com/lastline', false);
-    xhr.open('get', 'https://indoor-map-guide-9527.herokuapp.com/lastline', false);
-    xhr.send(null);
-    if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
-        console.log(xhr.responseText)
-        str = xhr.responseText
-    } else {
-        console.log('获取位置信息失败')
+    // xhr.open('get', 'http://localhost:3000/lastline', false)
+    //异步请求方式
+    xhr.onreadystatechange = function(){
+        if (xhr.readyState == 4) {
+            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+                str = xhr.responseText;
+                var diffX = parseInt(str.split(",")[0].split(":")[1]);
+                var diffY = parseInt(str.split(",")[1].split(":")[1]);
+                createLocation(diffX, diffY);
+            } else {
+                console.log("位置信息请求失败")
+            }
+        }
     }
+    xhr.open('get', 'https://indoor-map-guide-9527.herokuapp.com/lastline', true);
+    xhr.send(null);
 
-    var diffX = parseInt(str.split(",")[0].split(":")[1]);
-    var diffY = parseInt(str.split(",")[1].split(":")[1]);
+    function createLocation(diffX, diffY){
+        //1.新建一个定位标注实例
+        var lm = new esmap.ESLocationMarker({
+            url: 'image/pointer.png',
+            size: 120,
+            height: 30  
+        });
+        //2.添加到地图
+        map.addLocationMarker(lm);
+        //3.设置位置
+        var center = map.center;
+        lm.setPosition({
+            x: center.x + diffX,
+            y: center.y + diffY,
+            fnum: 2,  
+            height: 1      //离地面的偏移量
+        })
+    }
     
-    //1.新建一个定位标注实例
-    var lm = new esmap.ESLocationMarker({
-        url: 'image/pointer.png',
-        size: 100,
-        height: 30  
-    });
-    //2.添加到地图
-    map.addLocationMarker(lm);
-    //3.设置位置
-    var center = map.center;
-    lm.setPosition({
-        x: center.x + diffX,
-        y: center.y + diffY,
-        fnum: 2,  
-        height: 1      //离地面的偏移量
-    })
+   
     //更新地图标注
     // lm.rotateTo(-40);//有过渡效果的更新定位标注方向
     // lm.direction = -40; //改变定位标注的方向
@@ -196,49 +207,4 @@ map.on('loadComplete', function(){
     })
 })
 
-//地图路径规划
-// map.on('loadComplete', function(){
-//     //1.创建导航对象实例
-//     var navi = new esmap.ESNavigation({
-//         map: map,
-//         ladderType:1,  //跨层方案选择。1:距离最近(默认),2:电梯 3.楼梯 4.扶梯
-//         lineStyle: {   //路径规划线样式配置
-//             color: '#33cc61',
-//             //设置线为导航线样式
-//             lineType: esmap.ESLineType.ESARROW,
-//             // lineType: esmap.ESLineType.FULL,            
-//             lineWidth: 6,
-//             offsetHeight: 0.5,
-//             smooth: true,
-//             seeThrough: false,
-//             noAnimate: false
-//             //设置边线的颜色   
-//             // godEdgeColor: '#920000'
-//             //设置箭头颜色
-//             // godArrowColor: "#ff0000"
-//         },
-//     });
-//     //2.确定起点和终点
-//     //确定起点
-//     var center = map.center
-//     navi.setStartPoint({
-//         x: center.x,
-//         y: center.y,
-//         fnum: 1,
-//         height: 2,
-//         url: 'image/start.png',
-//         size: 64
-//     });
-//     //确定终点
-//     navi.setEndPoint({
-//         x: center.x + 10,
-//         y: center.y + 10,
-//         fnum: 1,
-//         height: 2,
-//         url: 'image/end.png',
-//         size: 64
-//     });
-//     //3.调用导航对象画线函数，显示路径规划
-//     // navi.drawNaviLine();
-//     console.log(center.x, center.y)
-// })
+

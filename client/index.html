@@ -10,6 +10,23 @@
 </head>
 <body>
     <div id="map-container"></div>
+
+    <div class="search">
+
+        <button type="button" id="startnav" class="btn btn-secondary" style="border: none">
+            导航
+        </button>
+    </div>
+    <!--  导航选点 -->
+    <div id="router" class="layer router">
+        <div class="routerInput">
+            <input id="startText" class="routerText" type="" name="" placeholder="点击地图可选择起点" readonly>
+        </div>
+        <div class="routerInput">
+            <input id="endText" class="routerText" type="" name="" placeholder="点击地图可选择终点" readonly>
+        </div>
+    </div>
+
     <div class="btns">
         <button id="btn2D" class="btn btn-default btn-info">2D</button>
         <button id="btn3D" class="btn btn-default btn-info">3D</button>
@@ -18,6 +35,6 @@
     <script src="lib/esmap.min.js"></script>
     <script src="lib/jquery-3.3.1.js"></script>
     <script src="index.js"></script>
-    
+    <script src="search.js"></script>
 </body>
 </html>
