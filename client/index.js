@@ -135,7 +135,7 @@ map.on('loadComplete', function(){
     var str = '';
     var xhr = new XMLHttpRequest();
     // xhr.open('get', 'https://indoor-map-guide-9527.herokuapp.com/lastline', false);
-    xhr.open('get', 'http://indoor-map-guide-9527.herokuapp.com/lastline', false);
+    xhr.open('get', 'https://indoor-map-guide-9527.herokuapp.com/lastline', false);
     xhr.send(null);
     if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
         console.log(xhr.responseText)
