@@ -54,23 +54,59 @@ $('#btn2D').on('click', function () {
 $('#btn3D').on('click', function () {
     map.viewMode = esmap.ESViewMode.MODE_3D;; //3维模式
 });
-
 map.on('mapClickNode', function(event) {
     // console.log(event)
 })
 
-//图片标注
-map.on('loadComplete',function(){
+map.on('loadComplete', function(){
+    //从后端获取位置信息
+    var str,location,destination;
+    var xhr = new XMLHttpRequest();
+    // xhr.open('get', 'https://indoor-map-guide-9527.herokuapp.com/', false);
+    // xhr.open('get', 'http://localhost:3000/', false)
+    //异步请求方式
+    xhr.onreadystatechange = function(){
+        if (xhr.readyState == 4) {
+            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+                str = xhr.responseText;
+                const obj = JSON.parse(str);
+                location = obj.location;
+                destination = obj.destination;
+                var diffX = parseInt(location.split(",")[0].split(":")[1]);
+                var diffY = parseInt(location.split(",")[1].split(":")[1]);
+                createLocation(diffX, diffY);
+                if (destination == '') return
+                createSearchLocation(destination);
+            } else {
+                console.log("位置信息请求失败")
+            }
+        }
+    }
+    xhr.open('get', 'https://indoor-map-guide-9527.herokuapp.com/info', true);
+    xhr.send(null);
+})
+
+function createSearchLocation(destination){
+    var result = {};
+    const queryParams = {
+        nodeType: esmap.ESNodeType.MODEL, //nodeType指定为房间类型
+        name: destination
+    }
+    esmap.ESMapUtil.search(map, 'all', queryParams, function (e) {
+        result.x = e[0].mapCoord.x;
+        result.y = e[0].mapCoord.y;
+        result.fnum = e[0].FloorNum;
+    })
     //新建一个图片标注图层
     var layer = new esmap.ESLayer(esmap.ESLayerType.IMAGE_MARKER);
     //创建一个图片标注实例
     im = new esmap.ESImageMarker({
-		x: center.x - 1,
-		y: center.y - 1,   //如果不添加x和y，则默认坐标在地图中心。
+		x: result.x,
+		y: result.y,   //如果不添加x和y，则默认坐标在地图中心。
 		url: 'image/user.png',  //图片标注的图片地址
-		size: 64,   			//图片大小 或者 size:{w:32,h:64},
+		size: 50,   			//图片大小 或者 size:{w:32,h:64},
 		spritify:true,			//跟随地图缩放变化大小，默认为true，可选参数
-		height:6,    			//距离地面高度
+		height:1,    			//距离地面高度
 		showLevel: 20,  		//地图缩放等级达到多少时隐藏,可选参数
 		seeThrough: true,		//是否可以穿透楼层一直显示,可选参数
 		//angle:30,  	//如果设置了就是固定marker角度，与地图一起旋转。(size需要重新设置)
@@ -79,11 +115,11 @@ map.on('loadComplete',function(){
     });
     //添加到楼层对象
     layer.addMarker(im);              //将imageMarker添加到图层
-	var floorLayer = map.getFloor(1)  //获取第一层的楼层对象
+	var floorLayer = map.getFloor(result.fnum)  //获取第一层的楼层对象
     floorLayer.addLayer(layer);       //将图层添加到楼层对象
     
     // layer.remove(im);   //删除某一个标注
-})
+}
 
 //线标注
 map.on('loadComplete', function(){
@@ -130,64 +166,25 @@ map.on('loadComplete', function(){
     map.clearLineMarkById(1)
 })
 
-//定位标注绘制
-map.on('loadComplete', function(){
-    //获取位置信息
-    var str = '';
-    var xhr = new XMLHttpRequest();
-    //同步请求方式
-    // xhr.open('get', 'https://indoor-map-guide-9527.herokuapp.com/lastline', false);
-    // xhr.open('get', 'http://localhost:3000/lastline', false)
-    //异步请求方式
-    xhr.onreadystatechange = function(){
-        if (xhr.readyState == 4) {
-            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
-                str = xhr.responseText;
-                var diffX = parseInt(str.split(",")[0].split(":")[1]);
-                var diffY = parseInt(str.split(",")[1].split(":")[1]);
-                createLocation(diffX, diffY);
-            } else {
-                console.log("位置信息请求失败")
-            }
-        }
-    }
-    xhr.open('get', 'https://indoor-map-guide-9527.herokuapp.com/lastline', true);
-    xhr.send(null);
+function createLocation(diffX, diffY){
+    //1.新建一个定位标注实例
+    var lm = new esmap.ESLocationMarker({
+        url: 'image/pointer.png',
+        size: 120,
+        height: 30  
+    });
+    //2.添加到地图
+    map.addLocationMarker(lm);
+    //3.设置位置
+    var center = map.center;
+    lm.setPosition({
+        x: center.x + diffX,
+        y: center.y + diffY,
+        fnum: 1,  
+        height: 1      //离地面的偏移量
+    })
+}
 
-    function createLocation(diffX, diffY){
-        //1.新建一个定位标注实例
-        var lm = new esmap.ESLocationMarker({
-            url: 'image/pointer.png',
-            size: 120,
-            height: 30  
-        });
-        //2.添加到地图
-        map.addLocationMarker(lm);
-        //3.设置位置
-        var center = map.center;
-        lm.setPosition({
-            x: center.x + diffX,
-            y: center.y + diffY,
-            fnum: 2,  
-            height: 1      //离地面的偏移量
-        })
-    }
-    
-   
-    //更新地图标注
-    // lm.rotateTo(-40);//有过渡效果的更新定位标注方向
-    // lm.direction = -40; //改变定位标注的方向
-    // lm.moveTo({
-    //     x: map.center.x + 10,
-    //     y: map.center.y + 10,
-    //     fnum: 2,  
-    //     height: 1,      //离地面的偏移量
-    //     time: 3
-    // });
-
-    //4.删除定位标注
-    // map.removeLocationMarker(lm)
-})
 
 //地图数据信息检索
 map.on('loadComplete', function(){

@@ -2,6 +2,7 @@ const express = require('express')
 const app = express()
 const port = process.env.PORT || 3000
 const fs = require('fs')
+const bodyParser = require('body-parser')
 const readline = require('readline')
 const stream = require('stream')
 
@@ -19,25 +20,31 @@ app.all('*',function (req, res, next) {
     }
   });
 
+//处理请求数据
+app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.json())
+
 app.use(express.static('client'))
 
-app.get('/', (req, res) => res.send('Connect!'))
-//由安卓发送位置信息
-app.get('/position/:coord', (req, res) => {
-  var position = req.params;
-  res.send(req.params)
-
-  //将位置信息写入到文件
-  fs.appendFile('./client/info.txt', position.coord + '\n', function(err){
-    if (err) {
-      return console.error(err)
-    }
-    console.log("文件写入成功")
+//安卓发送定位信息，终点信息
+var content;
+app.post('/info', (req, res) => {
+  res.set({
+    Accept: 'application/json'
   })
+  req.session.info = JSON.stringify(req.body);
+  content = JSON.stringify(req.body);
+  fs.appendFile('./client/infos.txt', content + '\n', function(err) {
+    if (err) {
+        return console.log(err);
+    }
+    res.send(content)
+    console.log('文件修改成功');
+  });
 })
-//web前端获取位置信息
-app.get('/lastline', (req, res) => {
-  const input = fs.createReadStream('./client/info.txt')
+
+app.get('/info', (req, res) => {
+  const input = fs.createReadStream('./client/infos.txt')
   const output = new stream
   const rl = readline.createInterface(input, output)
   let lastLine = '';
@@ -50,7 +57,6 @@ app.get('/lastline', (req, res) => {
     // console.log(lastLine)
     res.send(lastLine)
   })
-  
 })
 
 app.listen(port, () => console.log(`app listening on port ${port}!`))
