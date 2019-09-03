@@ -37,7 +37,7 @@ app.post('/info', (req, res) => {
     if (err) {
         return console.log(err);
     }
-    res.send(content)
+    // res.send(content)
     console.log('文件修改成功');
   });
 })
