@@ -58,18 +58,40 @@ map.on('mapClickNode', function(event) {
     // console.log(event)
 })
 
+var post_flag = false;
+function post(){
+    var obj = {}, location = '', destination = '';
+    if(post_flag) return; 
+    post_flag = true;
+    $.ajax({
+        url: 'http://localhost:3000/info',
+        data: {location:'x:5,y:5',destination:'挂号处'},
+        type: 'POST',
+        success: function(data){
+            post_flag =false; 
+            obj = JSON.parse(data);
+            location = obj.location;
+            destination = obj.destination;
+            var diffX = parseInt(location.split(",")[0].split(":")[1]);
+            var diffY = parseInt(location.split(",")[1].split(":")[1]);
+            if (destination == '') return
+            createSearchLocation(destination);
+            createLocation(diffX, diffY);
+        },
+        error: function(){
+            post_flag =false; 
+        }
+    })
+}
 map.on('loadComplete', function(){
-    //从后端获取位置信息
-    var str,location,destination;
-    var xhr = new XMLHttpRequest();
-    // xhr.open('get', 'https://indoor-map-guide-9527.herokuapp.com/', false);
-    // xhr.open('get', 'http://localhost:3000/', false)
-    //异步请求方式
+    var str, location, destination;
+    var obj; 
+    var xhr = new XMLHttpRequest()
     xhr.onreadystatechange = function(){
-        if (xhr.readyState == 4) {
-            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304){
+        if (xhr.readyState == 4){
+            if ((xhr.status >= 200 && xhr.status < 300) || xhr.status == 304) {
                 str = xhr.responseText;
-                const obj = JSON.parse(str);
+                obj = JSON.parse(str);
                 location = obj.location;
                 destination = obj.destination;
                 var diffX = parseInt(location.split(",")[0].split(":")[1]);
@@ -78,12 +100,14 @@ map.on('loadComplete', function(){
                 if (destination == '') return
                 createSearchLocation(destination);
             } else {
-                console.log("位置信息请求失败")
+                console.log("请求失败")
             }
         }
     }
-    xhr.open('get', 'https://indoor-map-guide-9527.herokuapp.com/info', true);
+    xhr.open("get", 'http://localhost:3000/info', true);
     xhr.send(null);
+    // xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
+    // xhr.send("location=" + 'x:1,y:2' + "&destination=" + '外科');
 })
 
 function createSearchLocation(destination){
@@ -170,18 +194,18 @@ function createLocation(diffX, diffY){
     //1.新建一个定位标注实例
     var lm = new esmap.ESLocationMarker({
         url: 'image/pointer.png',
-        size: 120,
+        size: 150,
         height: 30  
     });
     //2.添加到地图
     map.addLocationMarker(lm);
     //3.设置位置
-    var center = map.center;
+    var center = map.center
     lm.setPosition({
         x: center.x + diffX,
         y: center.y + diffY,
         fnum: 1,  
-        height: 1      //离地面的偏移量
+        height: 2
     })
 }
 

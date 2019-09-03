@@ -32,9 +32,8 @@ app.post('/info', (req, res) => {
   res.set({
     Accept: 'application/json'
   })
-  req.session.info = JSON.stringify(req.body);
   content = JSON.stringify(req.body);
-  fs.appendFile('./client/infos.txt', content + '\n', function(err) {
+  fs.writeFile('./client/infos.txt', content + '\n', function(err) {
     if (err) {
         return console.log(err);
     }

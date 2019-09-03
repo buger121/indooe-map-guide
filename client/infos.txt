@@ -1,8 +1,1 @@
-{"location":"x:1,y:2","destination":"0"}
-{"location":"x:1,y:2","destination":"www"}
-{"location":"x:1,y:2","destination":"wc"}
-{"location":"x:1,y:2","destination":"中文"}
-{"location":"x:1,y:2","destination":"0"}
-{"location":"x:1,y:2","destination":"we"}
-{"location":"x:1,y:2","destination":""}
-{"location":"x:1,y:2","destination":"挂号处"}
+{"location":"x:1,y:2","destination":"外科"}
