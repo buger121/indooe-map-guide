@@ -57,32 +57,6 @@ $('#btn3D').on('click', function () {
 map.on('mapClickNode', function(event) {
     // console.log(event)
 })
-
-var post_flag = false;
-function post(){
-    var obj = {}, location = '', destination = '';
-    if(post_flag) return; 
-    post_flag = true;
-    $.ajax({
-        url: 'http://localhost:3000/info',
-        data: {location:'x:5,y:5',destination:'挂号处'},
-        type: 'POST',
-        success: function(data){
-            post_flag =false; 
-            obj = JSON.parse(data);
-            location = obj.location;
-            destination = obj.destination;
-            var diffX = parseInt(location.split(",")[0].split(":")[1]);
-            var diffY = parseInt(location.split(",")[1].split(":")[1]);
-            if (destination == '') return
-            createSearchLocation(destination);
-            createLocation(diffX, diffY);
-        },
-        error: function(){
-            post_flag =false; 
-        }
-    })
-}
 map.on('loadComplete', function(){
     var str, location, destination;
     var obj; 
@@ -104,7 +78,7 @@ map.on('loadComplete', function(){
             }
         }
     }
-    xhr.open("get", 'http://localhost:3000/info', true);
+    xhr.open("get", 'https://git.heroku.com/indoor-map-guide-9527/info', true);
     xhr.send(null);
     // xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     // xhr.send("location=" + 'x:1,y:2' + "&destination=" + '外科');
