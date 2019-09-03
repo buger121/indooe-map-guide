@@ -78,7 +78,7 @@ map.on('loadComplete', function(){
             }
         }
     }
-    xhr.open("get", 'https://git.heroku.com/indoor-map-guide-9527/info', true);
+    xhr.open("get", 'https://indoor-map-guide-9527.herokuapp.com/info', true);
     xhr.send(null);
     // xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
     // xhr.send("location=" + 'x:1,y:2' + "&destination=" + '外科');
