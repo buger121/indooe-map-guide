@@ -8,21 +8,13 @@ var map = new esmap.ESMap({
     focusFloor: 1,                      //初始聚焦楼层
 });
 map.openMapById(472653);                 //根据ID打开地图
-var center = map.center;  //取地图的中心墨卡托坐标
+var navi = null;    //全局导航对象
+var startPoint = {};    //导航起点
+var endPoint = {};      //导航终点
 
 //声明楼层控件配置参数
 var ctlOpt = new esmap.ESControlOptions({
     position: esmap.ESControlPositon.RIGHT_TOP, 
-    imgURL: "image/wedgets/"
-});
-//声明放大缩小控制控件
-var ctlOpt1 = new esmap.ESControlOptions({
-    position: esmap.ESControlPositon.LEFT_TOP,
-    //位置x,y的偏移量
-    offset: {
-        x: -2,
-        y: 28
-    },
     imgURL: "image/wedgets/"
 });
 
@@ -30,7 +22,6 @@ var ctlOpt1 = new esmap.ESControlOptions({
 map.on('loadComplete', function () {
     //创建楼层控件
     var floorControl = new esmap.ESScrollFloorsControl(map, ctlOpt);
-    var zoomControl = new esmap.ESZoomControl(map, ctlOpt1)
     //单层多层切换按钮
     var toolControl = new esmap.ESToolControl(map);
 
@@ -54,8 +45,10 @@ $('#btn2D').on('click', function () {
 $('#btn3D').on('click', function () {
     map.viewMode = esmap.ESViewMode.MODE_3D;; //3维模式
 });
+
 map.on('mapClickNode', function(event) {
-    // console.log(event)
+    // console.log(event.name, parseInt(event.mapCoord.x - map.center.x),
+    // parseInt(event.mapCoord.y - map.center.y))
 })
 map.on('loadComplete', function(){
     var str, location, destination;
@@ -72,7 +65,13 @@ map.on('loadComplete', function(){
                 var diffY = parseInt(location.split(",")[1].split(":")[1]);
                 createLocation(diffX, diffY);
                 if (destination == '') return
-                createSearchLocation(destination);
+                // createSearchLocation(destination);
+                endPoint = serarchModelByName(destination)
+                var center = map.center
+                startPoint.x = center.x + diffX
+                startPoint.y = center.y + diffY
+                startPoint.fnum = 1
+                navi = drawRoutes(startPoint, endPoint)
             } else {
                 console.log("请求失败")
             }
@@ -81,10 +80,10 @@ map.on('loadComplete', function(){
     xhr.open("get", 'https://indoor-map-guide-9527.herokuapp.com/info', true);
     xhr.send(null);
     // xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
-    // xhr.send("location=" + 'x:1,y:2' + "&destination=" + '外科');
+    // xhr.send("location=" + 'x:17,y:-8' + "&destination=" + '眼科');
 })
 
-function createSearchLocation(destination){
+function serarchModelByName(destination) {
     var result = {};
     const queryParams = {
         nodeType: esmap.ESNodeType.MODEL, //nodeType指定为房间类型
@@ -95,6 +94,10 @@ function createSearchLocation(destination){
         result.y = e[0].mapCoord.y;
         result.fnum = e[0].FloorNum;
     })
+    return result;
+}
+function createSearchLocation(destination){
+    var result = serarchModelByName(destination)
     //新建一个图片标注图层
     var layer = new esmap.ESLayer(esmap.ESLayerType.IMAGE_MARKER);
     //创建一个图片标注实例

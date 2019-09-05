@@ -29,12 +29,15 @@
     justify-content: center;
     align-items: center;
     padding-left: 10px;
-    top: 2rem;
-    left: 3rem;
+    top: 3rem;
+    left: 1rem;
+    flex-direction: column;
+}
+.search button{
+    margin-bottom: 0.5rem;
 }
 #router {
     position: absolute;
-    padding: 20px;
     width: 200px;
     top: 1rem;
     left: 7rem;
@@ -49,7 +52,6 @@
     z-index: 999;
     display: none;
 }
-
 .router .routerInput {
     height: 40px;
     padding: 6px 0;
