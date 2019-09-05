@@ -2,7 +2,7 @@
     "apps": [
       {
         "name": "indoor-map-guide",
-        "script": "bin/www",
+        "script": "server",
         "log_date_format": "YYYY-MM-DD HH:mm:SS",
         "log_file": "logs/app1.log",
         "error_file": "logs/app1-err.log",
