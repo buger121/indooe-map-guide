@@ -25,9 +25,9 @@ map.on('loadComplete', function () {
     //单层多层切换按钮
     var toolControl = new esmap.ESToolControl(map);
 
-    map.rotateAngle = 0;    //设置地图的旋转角度
+    map.rotateAngle = 330;    //设置地图的旋转角度
     map.tiltAngle = 70;      //设置地图的倾斜角(最大72°)
-    map.scaleLevelTo(8);   //缩放到第10等级，共24等级
+    map.scaleLevelTo(15);   //缩放到第10等级，共24等级
     
     map.focusFloorNum = 1;//切换聚焦楼层方法1,如果是多楼层同时显示了,其它楼层不隐藏  
     map.changeFocusFloor(2);//切换聚焦楼层方法2,如果是多楼层同时显示了,其它楼层隐藏不显示  
