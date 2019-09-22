@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>地图导航</title>
-    <link rel="stylesheet" href="style.css">
-    <!-- <link rel="stylesheet" href="landscape.css"> -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 </head>
 <body>
@@ -34,52 +32,5 @@
 
     <script src="lib/esmap.min.js"></script>
     <script src="lib/jquery-3.3.1.js"></script>
-    <script src="index.js"></script>
-    <script src="search.js"></script>
-    <script>
-        changeOrientation(document.querySelector('body'));
-
-        function changeOrientation( $print ){
-            var width = document.documentElement.clientWidth;
-            var height =  document.documentElement.clientHeight;
-            if( width < height ){
-            // 竖屏
-            $print.style.width = height;
-            $print.style.height = width;
-            $print.style.top = (height-width)/2;
-            $print.style.left = 0-(height-width)/2;
-            $print.setAttribute('transfrom', 'rotate(90deg)');
-            $print.style.transformOrigin = '50% 50%';
-            } 
-            var evt = "onorientationchange" in window ? "orientationchange" : "resize";
-            window.addEventListener(evt, function() {
-                // console.log(evt);
-                setTimeout( function(){
-                    var width = document.documentElement.clientWidth;
-                    var height =  document.documentElement.clientHeight;
-                    if( width > height ){
-                    // 横屏
-                    $print.style.width = width;
-                    $print.style.height = height;
-                    $print.style.top = 0;
-                    $print.style.left = 0;
-                    $print.setAttribute('transfrom', 'none');
-                    $print.style.transformOrigin = '50% 50%';
-                    }
-                    else{
-                        // 竖屏
-                        $print.style.width = height;
-                        $print.style.height = width;
-                        $print.style.top = (height-width)/2;
-                        $print.style.left = 0-(height-width)/2;
-                        $print.setAttribute('transfrom', 'rotate(90deg)');
-                        $print.style.transformOrigin = '50% 50%';
-                    }
-                    
-                }  , 300 );
-
-            }, false);
-        }
-    </script>
 </body>
 </html>

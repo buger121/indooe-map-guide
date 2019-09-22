@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>地图导航</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+    <div id="map-container"></div>
+
+    <div class="search">
+        <button type="button" id="startnav" class="btn btn-secondary" style="border: none">
+            查找路径
+        </button>
+    </div>
+    <!--  导航选点 -->
+    <div id="router" class="layer router">
+        <div class="routerInput">
+            <input id="startText" class="routerText" type="" name="" placeholder="点击地图可选择起点" readonly>
+        </div>
+        <div class="routerInput">
+            <input id="endText" class="routerText" type="" name="" placeholder="点击地图可选择终点" readonly>
+        </div>
+    </div>
+
+    <div class="btns">
+        <button id="btn2D" class="btn btn-default btn-info">2D</button>
+        <button id="btn3D" class="btn btn-default btn-info">3D</button>
+    </div>
+
+    <script src="lib/esmap.min.js"></script>
+    <script src="lib/jquery-3.3.1.js"></script>
+<script type="text/javascript" src="/build/map1.js"></script></body>
+</html>

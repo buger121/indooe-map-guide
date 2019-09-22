@@ -5,6 +5,7 @@ const fs = require('fs')
 const bodyParser = require('body-parser')
 const readline = require('readline')
 const stream = require('stream')
+const path = require('path')
 
 //解决跨域
 app.all('*',function (req, res, next) {
@@ -43,7 +44,7 @@ app.post('/info', (req, res) => {
 })
 
 app.get('/info', (req, res) => {
-  const input = fs.createReadStream('./client/infos.txt')
+  const input = fs.createReadStream('./client/info/infos.txt')
   const output = new stream
   const rl = readline.createInterface(input, output)
   let lastLine = '';
@@ -56,6 +57,20 @@ app.get('/info', (req, res) => {
     // console.log(lastLine)
     res.send(lastLine)
   })
+})
+
+app.get('/map1', (req, res, next) => {
+  var option = {
+    root: path.join(__dirname, 'client/build')
+  }
+  res.sendFile('map1.html', option)
+})
+
+app.get('/map2', (req, res, next) => {
+  var option = {
+    root: path.join(__dirname, 'client/build')
+  }
+  res.sendFile('map2.html', option)
 })
 
 app.listen(port, () => console.log(`app listening on port ${port}!`))
