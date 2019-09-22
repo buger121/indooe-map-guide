@@ -34,7 +34,7 @@ app.post('/info', (req, res) => {
     Accept: 'application/json'
   })
   content = JSON.stringify(req.body);
-  fs.writeFile('./client/infos.txt', content + '\n', function(err) {
+  fs.writeFile('./client/info/infos.txt', content + '\n', function(err) {
     if (err) {
         return console.log(err);
     }
