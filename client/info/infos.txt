@@ -1,1 +1,1 @@
-{"location":"x:1,y:2","destination":"挂号处"}
+{"location":"x:5,y:5","destination":"儿科"}

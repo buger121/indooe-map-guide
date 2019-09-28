@@ -76,6 +76,7 @@ class MapCtrl extends baseComponent{
                 }
             }
             xhr.open("get", 'http://49.235.168.9:3000/info', true);
+            // xhr.open("get", 'http://localhost:3000/info', true)
             xhr.send(null);
             // xhr.setRequestHeader("Content-Type","application/x-www-form-urlencoded");
             // xhr.send("location=" + 'x:17,y:-8' + "&destination=" + '眼科');
