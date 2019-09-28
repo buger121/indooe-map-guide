@@ -38,25 +38,31 @@ app.post('/info', (req, res) => {
     if (err) {
         return console.log(err);
     }
-    res.send(content)
+    const option = {
+      root: path.join(__dirname, 'client/info')
+    }
+    res.sendFile('infos.txt', option)
     console.log('文件修改成功');
   });
 })
 
 app.get('/info', (req, res) => {
-  const input = fs.createReadStream('./client/info/infos.txt')
-  const output = new stream
-  const rl = readline.createInterface(input, output)
-  let lastLine = '';
-  rl.on('line', function (line) {
-      if (line.length >= 1) {
-          lastLine = line;
-      }
-  });
-  rl.on('close', function(){
-    // console.log(lastLine)
-    res.send(lastLine)
-  })
+  // const input = fs.createReadStream('./client/info/infos.txt')
+  // const output = new stream
+  // const rl = readline.createInterface(input, output)
+  // let lastLine = '';
+  // rl.on('line', function (line) {
+  //     if (line.length >= 1) {
+  //         lastLine = line;
+  //     }
+  // });
+  // rl.on('close', function(){
+  //   res.send(lastLine)
+  // })
+  const option = {
+    root: path.join(__dirname, 'client/info')
+  }
+  res.sendFile('infos.txt', option)
 })
 
 app.get('/map1', (req, res, next) => {
