@@ -3,9 +3,11 @@ const app = express()
 const port = process.env.PORT || 3000
 const fs = require('fs')
 const bodyParser = require('body-parser')
-const readline = require('readline')
-const stream = require('stream')
 const path = require('path')
+import dbBase from './dbBase'
+//连接数据库
+dbBase.connect()
+
 
 //解决跨域
 app.all('*',function (req, res, next) {
@@ -28,41 +30,16 @@ app.use(bodyParser.json())
 app.use(express.static('client'))
 
 //安卓发送定位信息，终点信息
-var content;
-app.post('/info', (req, res) => {
-  res.set({
-    Accept: 'application/json'
+app.post('/info',(req, res) => {
+  dbBase.insert(req.body).then(function(value){
+    res.send(value)
   })
-  content = JSON.stringify(req.body);
-  fs.writeFile('./client/info/infos.txt', content + '\n', function(err) {
-    if (err) {
-        return console.log(err);
-    }
-    const option = {
-      root: path.join(__dirname, 'client/info')
-    }
-    res.sendFile('infos.txt', option)
-    console.log('文件修改成功');
-  });
 })
 
-app.get('/info', (req, res) => {
-  // const input = fs.createReadStream('./client/info/infos.txt')
-  // const output = new stream
-  // const rl = readline.createInterface(input, output)
-  // let lastLine = '';
-  // rl.on('line', function (line) {
-  //     if (line.length >= 1) {
-  //         lastLine = line;
-  //     }
-  // });
-  // rl.on('close', function(){
-  //   res.send(lastLine)
-  // })
-  const option = {
-    root: path.join(__dirname, 'client/info')
-  }
-  res.sendFile('infos.txt', option)
+app.get('/info',(req, res) => {
+  dbBase.find().then(function(value){
+    res.send(value)
+  })
 })
 
 app.get('/map1', (req, res, next) => {
