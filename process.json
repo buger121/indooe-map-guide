@@ -2,7 +2,7 @@
     "apps": [
       {
         "name": "indoor-map-guide",
-        "script": "server",
+        "script": "node build/bundle.js",
         "log_date_format": "YYYY-MM-DD HH:mm:SS",
         "log_file": "logs/app1.log",
         "error_file": "logs/app1-err.log",
