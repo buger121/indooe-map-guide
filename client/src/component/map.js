@@ -87,6 +87,7 @@ class MapCtrl extends baseComponent {
     if (this.startNavi) {
       router.style.display = "block";
       btn.innerText = "清除路径";
+      this.navi.clearAll();
       this.createNavi(map);
     } else {
       router.style.display = "none";
