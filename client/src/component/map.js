@@ -95,6 +95,9 @@ class MapCtrl extends baseComponent {
       document.getElementById("startText").value = "";
       document.getElementById("endText").value = "";
       if (this.navi) this.navi.clearAll();
+      this.startPoint = {};
+      this.endPoint = {};
+      this.clickCount = 0;
     }
   }
 
