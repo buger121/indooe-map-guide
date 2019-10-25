@@ -62,7 +62,6 @@ class BaseComponent {
     });
     //2.确定起点和终点
     //确定起点
-    console.log("draw:", startPoint, endPoint);
     const center = map.center;
     navi.setStartPoint({
       x: startPoint.x,
