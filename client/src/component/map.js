@@ -78,6 +78,13 @@ class MapCtrl extends baseComponent {
       //获取地图视图的边框
       that.show(map, fnum, that.mapCoord);
     });
+    mapModel.addEventListener("touchend", function() {
+      if (!that.startNavi) return;
+      const fnum = that.curfnum;
+      if (!fnum) return;
+      //获取地图视图的边框
+      that.show(map, fnum, that.mapCoord);
+    });
   }
 
   navigation(map) {
